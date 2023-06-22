@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.*
@@ -36,7 +37,6 @@ class ImageGalleryActivity : ComponentActivity() {
     }
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurrentImageGallery(
     activity: ImageGalleryActivity,
@@ -62,10 +62,11 @@ fun CurrentImageGallery(
                 }
             )
         },
-    ) {
+    ) { padding ->
         when (state) {
             is GalleryList -> {
                 GalleryListScreen(
+                    modifier = Modifier.padding(padding),
                     items = photoList,
                     state = scrollState,
                     isLoading = (photoList.loadState.refresh is LoadState.Loading || photoList.loadState.append is LoadState.Loading),

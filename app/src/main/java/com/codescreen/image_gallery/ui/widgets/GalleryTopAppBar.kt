@@ -56,7 +56,6 @@ fun GalleryTopAppBar(
     )
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Preview(showBackground = true, widthDp = 320, heightDp = 600)
 @Composable
 fun GalleryTopAppBarPreview() {
@@ -72,6 +71,8 @@ fun GalleryTopAppBarPreview() {
                     showGoBack = true
                 )
             },
-        ) {}
+        ) {
+
+        }
     }
 }

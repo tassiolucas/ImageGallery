@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.filter
 
 @Composable
 fun GalleryListScreen(
+    modifier: Modifier,
     items: LazyPagingItems<PhotoInfo>,
     state: LazyGridState = rememberLazyGridState(),
     isLoading: Boolean,
@@ -46,7 +47,7 @@ fun GalleryListScreen(
     }
 
     ConstraintLayout(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .animateContentSize(
                 spring(
