@@ -92,6 +92,10 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.38.1")
     kapt("com.google.dagger:hilt-compiler:2.38.1")
 
+    // Paging
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation("androidx.paging:paging-compose:3.2.0-beta01")
+
     // Compose
     implementation("androidx.compose.runtime:runtime:1.3.3")
     implementation("androidx.compose.ui:ui:1.3.3")

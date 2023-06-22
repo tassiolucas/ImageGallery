@@ -35,11 +35,9 @@ fun LifecycleOwner.onBackPressed(action: () -> Unit) {
             backPressedCallback.remove()
         }
     }
-    LocalLifecycleOwner.current.lifecycle.addObserverOnce(object : LifecycleEventObserver {
-        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-            if (event == Lifecycle.Event.ON_DESTROY) {
-                backPressedCallback.remove()
-            }
+    LocalLifecycleOwner.current.lifecycle.addObserverOnce { _, event ->
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            backPressedCallback.remove()
         }
-    })
+    }
 }

@@ -12,6 +12,7 @@ interface Api {
     suspend fun getPhotos(
         @Query("method") method: String,
         @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
         @Query("api_key") apiKey: String = "f9cc014fa76b098f9e82f1c288379ea1",
         @Query("tags") tags: String = "kitten",
         @Query("format") json: String = "json",

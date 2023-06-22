@@ -2,16 +2,14 @@ package com.codescreen.image_gallery.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.codescreen.image_gallery.domain.model.PhotoInfo
 import com.codescreen.image_gallery.domain.model.repository.Repository
-import com.codescreen.image_gallery.services.repository.Resource.Loading
-import com.codescreen.image_gallery.services.repository.Resource.Success
 import com.codescreen.image_gallery.ui.ImageGalleryViewModel.ImageGalleryScreenState.GalleryList
 import com.codescreen.image_gallery.ui.ImageGalleryViewModel.ImageGalleryScreenState.ItemDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,19 +33,6 @@ class ImageGalleryViewModel @Inject constructor(
 
     private val _list = mutableListOf<PhotoInfo>()
 
-    init {
-        getListPhotoInfo()
-    }
-
-    fun addPage() {
-        val cards = _list.count()
-
-        if (cards % PAGE_ITEMS_COUNT == 0 && cards >= PAGE_ITEMS_COUNT && !_isLoading.value) {
-            _pageIndex.value++
-            getListPhotoInfo()
-        }
-    }
-
     fun selectItem(photo: PhotoInfo) {
         _uiState.value = ItemDetail
         _photoSelected.value = photo
@@ -58,27 +43,7 @@ class ImageGalleryViewModel @Inject constructor(
         _photoSelected.value = null
     }
 
-    private fun getListPhotoInfo() {
-        viewModelScope.launch {
-            repository.getPhotoList(_pageIndex.value, _list).collect { resource ->
-                when (resource) {
-                    is Loading -> {
-                        _isLoading.value = true
-                    }
-                    is Success -> {
-                        resource.data?.let {
-                            _photos.value = it
-                        }
-                        _isLoading.value = false
-                    }
-                    else -> {
-                        _isLoading.value = false
-                        resource.message
-                    }
-                }
-            }
-        }
-    }
+    fun getPhotoInfoList() = repository.getPhotoList(_pageIndex.value, PAGE_ITEMS_COUNT).cachedIn(viewModelScope)
 
     sealed class ImageGalleryScreenState {
         object GalleryList : ImageGalleryScreenState()
@@ -86,6 +51,6 @@ class ImageGalleryViewModel @Inject constructor(
     }
 
     private companion object {
-        const val PAGE_ITEMS_COUNT = 100
+        const val PAGE_ITEMS_COUNT = 10
     }
 }

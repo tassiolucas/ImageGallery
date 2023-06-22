@@ -13,6 +13,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.codescreen.image_gallery.ui.ImageGalleryViewModel.ImageGalleryScreenState.*
 import com.codescreen.image_gallery.ui.gallery_list.GalleryListScreen
 import com.codescreen.image_gallery.ui.item_detail.ItemDetailScreen
@@ -41,10 +43,9 @@ fun CurrentImageGallery(
     viewModel: ImageGalleryViewModel = viewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-    val list by viewModel.photos.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
     val photoSelected by viewModel.photoSelected.collectAsState()
     val scrollState: LazyGridState = rememberLazyGridState()
+    val photoList = viewModel.getPhotoInfoList().collectAsLazyPagingItems()
 
     activity.onBackPressed {
         viewModel.goBack()
@@ -65,14 +66,14 @@ fun CurrentImageGallery(
         when (state) {
             is GalleryList -> {
                 GalleryListScreen(
-                    items = list,
+                    items = photoList,
                     state = scrollState,
-                    isLoading = isLoading,
+                    isLoading = (photoList.loadState.refresh is LoadState.Loading || photoList.loadState.append is LoadState.Loading),
                     onItemSelected = { photoSelected ->
                         viewModel.selectItem(photoSelected)
                     }
                 ) {
-                    viewModel.addPage()
+
                 }
             }
             is ItemDetail -> {
